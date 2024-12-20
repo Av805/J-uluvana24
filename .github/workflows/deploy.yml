@@ -1,0 +1,21 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main  # Või mõni muu haru, mida kasutad (nt `master`)
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest  # Käivitatakse Ubuntu süsteemil
+
+    permissions:
+      id-token: write   # Lubab ID-märgi kirjutamise õigused
+      contents: read    # Lugejaõigused repository sisu jaoks
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2  # Laadib koodi GitHubist
+
+    - name: Deploy to Pages
+      uses: actions/deploy-pages@v4  # Kasutab GitHub Pages'i juurutamiseks
