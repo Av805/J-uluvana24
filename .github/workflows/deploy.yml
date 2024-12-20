@@ -3,19 +3,39 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main  # Või mõni muu haru, mida kasutad (nt `master`)
+      - main  # Või muu haru, mida kasutad
 
 jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Build the site (kui on vajalik build käsk)
+      run: npm run build  # Eemalda, kui sul pole build käsku, või kohanda vastavalt
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: github-pages
+        path: ./build  # Kohanda vastavalt oma build kausta asukohale
+        # Kui sul pole build kausta, siis kasuta lihtsalt: path: . (root kaust)
+        
   deploy:
-    runs-on: ubuntu-latest  # Käivitatakse Ubuntu süsteemil
+    runs-on: ubuntu-latest
+    needs: build  # Tagab, et build samm käivitatakse enne
 
     permissions:
-      id-token: write   # Lubab ID-märgi kirjutamise õigused
-      contents: read    # Lugejaõigused repository sisu jaoks
+      id-token: write
+      contents: read
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2  # Laadib koodi GitHubist
+      uses: actions/checkout@v2
 
-    - name: Deploy to Pages
-      uses: actions/deploy-pages@v4  # Kasutab GitHub Pages'i juurutamiseks
+    - name: Deploy to GitHub Pages
+      uses: actions/deploy-pages@v4
+      with:
+        branch: gh-pages  # Või muu haru, kuhu tahad juurutada
+        folder: ./build  # Kui üles laaditud artefakt oli kaustas build, siis viita sellele
