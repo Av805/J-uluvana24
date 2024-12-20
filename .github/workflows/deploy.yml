@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main  # Või muu haru, mida kasutad
+      - main  
 
 jobs:
   build:
@@ -13,18 +13,18 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Build the site (kui on vajalik build käsk)
-      run: npm run build  # Eemalda, kui sul pole build käsku, või kohanda vastavalt
+      run: npm run build 
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: github-pages
-        path: ./build  # Kohanda vastavalt oma build kausta asukohale
-        # Kui sul pole build kausta, siis kasuta lihtsalt: path: . (root kaust)
+        path: ./build 
+       
         
   deploy:
     runs-on: ubuntu-latest
-    needs: build  # Tagab, et build samm käivitatakse enne
+    needs: build 
 
     permissions:
       id-token: write
